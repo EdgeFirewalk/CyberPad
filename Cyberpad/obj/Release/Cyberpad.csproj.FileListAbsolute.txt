@@ -1,0 +1,16 @@
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\bin\Release\Cyberpad.exe.config
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\bin\Release\Cyberpad.exe
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\bin\Release\Cyberpad.pdb
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\MainWindow.g.cs
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\App.g.cs
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\Cyberpad_MarkupCompile.cache
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\Cyberpad_MarkupCompile.lref
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\MainWindow.baml
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\Cyberpad.g.resources
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\Cyberpad.Properties.Resources.resources
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\Cyberpad.csproj.GenerateResource.cache
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\Cyberpad.csproj.CoreCompileInputs.cache
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\Cyberpad.exe
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\Cyberpad.pdb
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\Cyberpad.csprojAssemblyReference.cache
+C:\Users\Игорь\Desktop\Cyberpad\Cyberpad\obj\Release\App.baml
