@@ -9,8 +9,10 @@ namespace Cyberpad
 {
     public partial class MainWindow : Window
     {
-        private string currentDirectory;
+        private string currentDirectory; // Path to programm
         private string samplesPath;
+
+        private bool playLock = false; // Activates when you choose a song
 
         enum ButtonCodes
         {
@@ -154,7 +156,7 @@ namespace Cyberpad
             for (int i = 0; i < buttons.Length; i++)
             {
                 Key mykey = (Key)k.ConvertFromString(buttons[i].Name);
-                if (e.Key == mykey)
+                if (e.Key == mykey && !playLock)
                 {
                     buttons[i].Foreground = new SolidColorBrush(Colors.Red);
                     buttons[i].BorderBrush = new SolidColorBrush(Colors.Red);
@@ -166,14 +168,24 @@ namespace Cyberpad
             //===========================Specific Keys===================
             if (e.Key == Key.F1)
             {
+                playLock = true;
+
                 SongNameBox.Visibility = Visibility.Visible;
                 LoadTrackButton.Visibility = Visibility.Visible;
             }
             else if (e.Key == Key.F9) { }
             else if (e.Key == Key.Space) { StopSounds(); }
+            else if (e.Key == Key.Up) 
+            { 
+                if (HowToPlayText.FontSize < 100)
+                    HowToPlayText.FontSize++; 
+            }
+            else if (e.Key == Key.Down) 
+            { 
+                if (HowToPlayText.FontSize > 10)
+                    HowToPlayText.FontSize--; 
+            }
             else if (e.Key == Key.Escape) { Close(); }
-            else if (e.Key == Key.Up) { HowToPlayText.FontSize++; }
-            else if (e.Key == Key.Down) { HowToPlayText.FontSize--; }
             //===========================================================
         }
 
@@ -188,10 +200,15 @@ namespace Cyberpad
         private void LoadTrackButton_Click(object sender, RoutedEventArgs e)
         {
             samplesPath = currentDirectory + "\\Samples\\" + SongNameBox.Text;
+
             ReadHowToPlayFile(samplesPath);
+
             SongNameBox.Visibility = Visibility.Hidden;
             LoadTrackButton.Visibility = Visibility.Hidden;
+
             songNameLabel.Content = SongNameBox.Text;
+
+            playLock = false;
         }
 
         private void ReadHowToPlayFile(string path)
