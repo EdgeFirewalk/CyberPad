@@ -32,13 +32,14 @@ namespace Cyberpad
             SongNameBox.Visibility = Visibility.Hidden;
             LoadTrackButton.Visibility = Visibility.Hidden;
 
-            InitialiseMediaPlayers();
-            InitialiseButtons();
+            InitializeMediaPlayers();
+            InitializeButtons();
         }
 
-        private void InitialiseMediaPlayers()
+        private void InitializeMediaPlayers()
         {
-            double barValuePerButton = (LaunchpadCondBar.Maximum / 40) / 2;
+            // Sounds initialization takes half of Launchpad's Progress Bar
+            double barValuePerButton = ((LaunchpadCondBar.Maximum / sounds.Length) / 2);
 
             for (int i = 0; i < sounds.Length; i++)
             {
@@ -48,26 +49,30 @@ namespace Cyberpad
             }
         }
 
-        private void InitialiseButtons()
+        private void InitializeButtons()
         {
-            double barValuePerButton = (LaunchpadCondBar.Maximum / 40) / 2;
+            // Buttons initialization takes half of Launchpad's Progress Bar
+            double barValuePerButton = ((LaunchpadCondBar.Maximum / buttons.Length) / 2);
 
-            int rows = 4;
-            int cols = 10;
+            const int rows = 4;  // Of buttons
+            const int cols = 10; // Of buttons
 
-            int amountOf = -1;
+            int amountOf = 0; // Amount of buttons
 
+            const int step = 85;
             int xStep = 0;
             int yStep = 0;
 
-            int iterator = 0;
+            const int numbersFontSize = 55;
+            const int lettersFontSize = 50;
+
+            int iterator = 0; // For loops (not the same as amountOf)
 
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
                 {
                     buttons[iterator] = new Button();
-                    amountOf++;
 
                     buttons[iterator].Width = 80;
                     buttons[iterator].Height = 80;
@@ -87,55 +92,58 @@ namespace Cyberpad
                     //===========================Specific Buttons Here===================
                     if (amountOf < 9)
                     {
-                        buttons[iterator].FontSize = 55;
+                        buttons[iterator].FontSize = numbersFontSize;
                         buttons[iterator].Name = Convert.ToString((ButtonCodes)amountOf);
                         buttons[iterator].Content = Convert.ToString(amountOf + 1);
                     }
                     else if (amountOf == 9)
                     {
-                        buttons[iterator].FontSize = 55;
+                        buttons[iterator].FontSize = numbersFontSize;
                         buttons[iterator].Name = Convert.ToString((ButtonCodes)amountOf);
                         buttons[iterator].Content = "0";
                     }
                     else if (amountOf == 29)
                     {
-                        buttons[iterator].FontSize = 50;
+                        buttons[iterator].FontSize = lettersFontSize;
                         buttons[iterator].Name = Convert.ToString((ButtonCodes)amountOf);
                         buttons[iterator].Content = ":";
                     }
                     else if (amountOf == 37)
                     {
-                        buttons[iterator].FontSize = 50;
+                        buttons[iterator].FontSize = lettersFontSize;
                         buttons[iterator].Name = Convert.ToString((ButtonCodes)amountOf);
                         buttons[iterator].Content = "<";
                     }
                     else if (amountOf == 38)
                     {
-                        buttons[iterator].FontSize = 50;
+                        buttons[iterator].FontSize = lettersFontSize;
                         buttons[iterator].Name = Convert.ToString((ButtonCodes)amountOf);
                         buttons[iterator].Content = ">";
                     }
                     else if (amountOf == 39)
                     {
-                        buttons[iterator].FontSize = 50;
+                        buttons[iterator].FontSize = lettersFontSize;
                         buttons[iterator].Name = Convert.ToString((ButtonCodes)amountOf);
                         buttons[iterator].Content = "/";
                     }
                     //===================================================================
                     else
                     {
-                        buttons[iterator].FontSize = 50;
+                        buttons[iterator].FontSize = lettersFontSize;
                         buttons[iterator].Name = Convert.ToString((ButtonCodes)amountOf);
                         buttons[iterator].Content = Convert.ToString((ButtonCodes)amountOf);
                     }
 
                     mainCanvas.Children.Add(buttons[iterator]);
+                    amountOf++;
+
                     LaunchpadCondBar.Value += barValuePerButton;
-                    xStep += 85;
+
+                    xStep += step;
                     iterator++;
                 }
                 xStep = 0;
-                yStep += 85;
+                yStep += step;
             }
         }
 
