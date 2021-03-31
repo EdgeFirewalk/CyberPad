@@ -41,13 +41,13 @@ namespace Cyberpad
         private void InitializeMediaPlayers()
         {
             // Sounds initialization takes half of Launchpad's Progress Bar
-            double barValuePerButton = ((LaunchpadCondBar.Maximum / sounds.Length) / 2);
+            double barValuePerSound = ((LaunchpadCondBar.Maximum / sounds.Length) / 2);
 
             for (int i = 0; i < sounds.Length; i++)
             {
                 sounds[i] = new MediaPlayer();
                 sounds[i].Volume = 1;
-                LaunchpadCondBar.Value += barValuePerButton;
+                LaunchpadCondBar.Value += barValuePerSound;
             }
         }
 
