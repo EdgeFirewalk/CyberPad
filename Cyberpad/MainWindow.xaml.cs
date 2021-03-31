@@ -61,7 +61,7 @@ namespace Cyberpad
 
             int amountOf = 0; // Amount of buttons
 
-            const int step = 85;
+            const int step = 85; // Step per button
             int xStep = 0;
             int yStep = 0;
 
