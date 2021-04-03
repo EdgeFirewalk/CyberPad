@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -9,10 +10,10 @@ namespace Cyberpad
 {
     public partial class MainWindow : Window
     {
-        private string currentDirectory; // Path to programm
-        private string samplesPath;
+        private string samplesPath; // DISC:\\...\...\...\...\Samples
+        private string songPath;    // DISC:\\...\...\...\...\Samples\<SongName>
 
-        private bool playLock = false; // Activates when you choose a song
+        private bool playLock = false; // Equals true when you choose a song
 
         enum ButtonCodes
         {
@@ -25,17 +26,17 @@ namespace Cyberpad
         MediaPlayer[] sounds = new MediaPlayer[40];
         Button[] buttons = new Button[40];
 
+        string[] songs; // Contains songs from samplesPath (every song is a folder)
+
         public MainWindow()
         {
             InitializeComponent();
 
-            currentDirectory = Environment.CurrentDirectory;
-            LaunchpadCondBar.Value = 0;
-            SongNameBox.Visibility = Visibility.Hidden;
-            LoadTrackButton.Visibility = Visibility.Hidden;
+            samplesPath = Environment.CurrentDirectory + @"\Samples\";
 
             InitializeMediaPlayers();
             InitializeButtons();
+            ReadSamplesFolder();
         }
 
         private void InitializeMediaPlayers()
@@ -46,7 +47,6 @@ namespace Cyberpad
             for (int i = 0; i < sounds.Length; i++)
             {
                 sounds[i] = new MediaPlayer();
-                sounds[i].Volume = 1;
                 LaunchpadCondBar.Value += barValuePerSound;
             }
         }
@@ -149,6 +149,47 @@ namespace Cyberpad
             }
         }
 
+        private void ReadSamplesFolder()
+        {
+            songs = System.IO.Directory.GetDirectories(samplesPath);
+            foreach (string song in songs)
+            {
+                songsListComboBox.Items.Add(song);
+            }
+        }
+
+        private void songsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int i = songsListComboBox.SelectedIndex;
+            songPath = songs[i];
+
+            string songName = new DirectoryInfo(songPath).Name;
+            songNameLabel.Content = songName;
+
+            ReadHowToPlayFile(songPath);
+
+            songsListComboBox.Visibility = Visibility.Hidden;
+            f2ButtonText.Visibility = Visibility.Hidden;
+
+            playLock = false;
+        }
+
+        private void ReadHowToPlayFile(string path)
+        {
+            path = path + @"\howtoplay.lp"; // DISC:\\...\...\...\...\Samples\<SongName>\howtoplay.lp
+            try
+            {
+                using (StreamReader sr = new StreamReader(path))
+                {
+                    HowToPlayText.Content = sr.ReadToEnd();
+                }
+            }
+            catch 
+            {
+                HowToPlayText.Content = "---\"howtoplay.lp\" \nnot found---";
+            }
+        }
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             KeyConverter k = new KeyConverter();
@@ -160,7 +201,7 @@ namespace Cyberpad
                 {
                     buttons[i].Foreground = new SolidColorBrush(Colors.Red);
                     buttons[i].BorderBrush = new SolidColorBrush(Colors.Red);
-                    try { sounds[i].Open(new Uri(samplesPath + "\\" + ((ButtonCodes)i) + ".wav")); } catch { }
+                    try { sounds[i].Open(new Uri(songPath + "\\" + ((ButtonCodes)i) + ".wav")); } catch { }
                     sounds[i].Play();
                 }
             }
@@ -170,17 +211,24 @@ namespace Cyberpad
             {
                 playLock = true;
 
-                SongNameBox.Visibility = Visibility.Visible;
-                LoadTrackButton.Visibility = Visibility.Visible;
+                songsListComboBox.Visibility = Visibility.Visible;
+                f2ButtonText.Visibility = Visibility.Visible;
+            }
+            if (e.Key == Key.F2)
+            {
+                playLock = false;
+
+                songsListComboBox.Visibility = Visibility.Hidden;
+                f2ButtonText.Visibility = Visibility.Hidden;
             }
             else if (e.Key == Key.F9) { }
             else if (e.Key == Key.Space) { StopSounds(); }
-            else if (e.Key == Key.Up) 
+            else if (e.Key == Key.Up && !playLock) 
             { 
                 if (HowToPlayText.FontSize < 100)
                     HowToPlayText.FontSize++; 
             }
-            else if (e.Key == Key.Down) 
+            else if (e.Key == Key.Down && !playLock) 
             { 
                 if (HowToPlayText.FontSize > 10)
                     HowToPlayText.FontSize--; 
@@ -197,34 +245,6 @@ namespace Cyberpad
             }
         }
 
-        private void LoadTrackButton_Click(object sender, RoutedEventArgs e)
-        {
-            samplesPath = currentDirectory + "\\Samples\\" + SongNameBox.Text;
-
-            ReadHowToPlayFile(samplesPath);
-
-            SongNameBox.Visibility = Visibility.Hidden;
-            LoadTrackButton.Visibility = Visibility.Hidden;
-
-            songNameLabel.Content = SongNameBox.Text;
-
-            playLock = false;
-        }
-
-        private void ReadHowToPlayFile(string path)
-        {
-            HowToPlayText.Content = String.Empty;
-            path = path + "\\howtoplay.lp";
-            try
-            {
-                using (StreamReader sr = new StreamReader(path))
-                {
-                    HowToPlayText.Content = sr.ReadToEnd();
-                }
-            }
-            catch { }
-        }
-
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
             for (int i = 0; i < buttons.Length; i++)
@@ -232,11 +252,6 @@ namespace Cyberpad
                 buttons[i].Foreground = new SolidColorBrush(Colors.White);
                 buttons[i].BorderBrush = new SolidColorBrush(Colors.White);
             }
-        }
-
-        private void SongNameBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            SongNameBox.Text = String.Empty;
         }
     }
 }

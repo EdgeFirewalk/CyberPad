@@ -16,13 +16,13 @@
 
             <Label x:Name="songNameLabel" Content="##################" Canvas.Left="979" Width="295" Height="53" Foreground="#FF19F6B1" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="25" VerticalContentAlignment="Top" Canvas.Top="-7"/>
 
-            <TextBox x:Name="SongNameBox" Canvas.Left="448" TextWrapping="Wrap" Text="SongName0000000" Height="63" Width="521" Foreground="#FF19F6B1" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="50" Background="{x:Null}" BorderBrush="#FF19F6B1" BorderThickness="1" SelectionBrush="#FF19F6B1" CaretBrush="#FF19F6B1" Canvas.Top="5" GotFocus="SongNameBox_GotFocus"/>
-            <Button x:Name="LoadTrackButton" Template="{StaticResource NoMouseOverButtonTemplate}" Content="Load Track" Canvas.Left="448" Canvas.Top="73" Width="521" Height="44" Background="{x:Null}" BorderBrush="#FF19F6B1" Foreground="#FF19F6B1" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="25" BorderThickness="1" Click="LoadTrackButton_Click" ClickMode="Press"/>
+            <ComboBox x:Name="songsListComboBox" Canvas.Left="448" Width="521" Height="46" SelectionChanged="songsList_SelectionChanged" BorderBrush="Black" Foreground="Black" Background="Black" FontSize="15" Opacity="0.6" Visibility="Hidden"/>
 
             <GridSplitter Height="691" Canvas.Left="974" Width="5" Background="White" Cursor="Arrow"/>
 
             <Label x:Name="HowToPlayText"  Content="##################" Canvas.Left="979" Canvas.Top="24" Height="667" Width="295" Foreground="White" FontSize="25"/>
             <Label Content="[F1] - Track | [Up-Down] - Txt Size | [F9] - Help" Canvas.Left="10" Canvas.Top="122" Height="97" Width="959" Foreground="#FF3E7DEA" Background="{x:Null}" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="37" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Label x:Name="f2ButtonText" Content="[F2] - Hide" Canvas.Left="448" Canvas.Top="51" Height="57" Width="521" Foreground="#FF3E7DEA" Background="{x:Null}" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="37" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Visibility="Hidden"/>
             <Label Content="[Space] - Stop" Canvas.Left="10" Canvas.Top="584" Height="97" Width="959" Foreground="#FF3E7DEA" Background="{x:Null}" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="37" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
         </Canvas>
     </Grid>
