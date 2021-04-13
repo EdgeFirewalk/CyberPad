@@ -1,19 +1,24 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using NAudio.Wave;
 
 namespace Cyberpad
 {
     public partial class MainWindow : Window
     {
+        private string programPath;
+
         private string samplesPath; // DISC:\\...\...\...\...\Samples
         private string songPath;    // DISC:\\...\...\...\...\Samples\<SongName>
 
-        private bool playLock = false; // Equals true when you choose a song
+        string[] songs; // Contains songs from samplesPath (every song is a folder with sounds)
+
+        private bool playLock = false; // Equals true when you choosing a song
 
         enum ButtonCodes
         {
@@ -23,31 +28,31 @@ namespace Cyberpad
             Z, X, C, V, B, N, M, OemComma, OemPeriod, OemQuestion
         }
 
-        MediaPlayer[] sounds = new MediaPlayer[40];
         Button[] buttons = new Button[40];
 
-        string[] songs; // Contains songs from samplesPath (every song is a folder)
+        MediaPlayer[] samples = new MediaPlayer[40];
 
         public MainWindow()
         {
             InitializeComponent();
 
-            samplesPath = Environment.CurrentDirectory + @"\Samples\";
+            programPath = Environment.CurrentDirectory;
 
-            InitializeMediaPlayers();
+            samplesPath = programPath + @"\Samples\"; // DISC:\\...\...\...\<ProgramFloder>\Samples
+
             InitializeButtons();
             ReadSamplesFolder();
-        }
+            LaunchpadCondBar.Foreground = Brushes.Yellow;
 
-        private void InitializeMediaPlayers()
-        {
-            // Sounds initialization takes half of Launchpad's Progress Bar
-            double barValuePerSound = ((LaunchpadCondBar.Maximum / sounds.Length) / 2);
+            volumeSlider.Visibility = Visibility.Hidden;
+            entAndVolTextLabel.Visibility = Visibility.Hidden;
 
-            for (int i = 0; i < sounds.Length; i++)
+            if (File.Exists(programPath + @"\sets.lp")) { }
+            else
             {
-                sounds[i] = new MediaPlayer();
-                LaunchpadCondBar.Value += barValuePerSound;
+                Process.Start(programPath + @"\Fonts\Glitch inside.otf");
+                MessageBox.Show("Please add \"Glitch Inside\" font for better experience.", "Font Message");
+                File.Create(programPath + @"\sets.lp");
             }
         }
 
@@ -166,20 +171,34 @@ namespace Cyberpad
             string songName = new DirectoryInfo(songPath).Name;
             songNameLabel.Content = songName;
 
-            ReadHowToPlayFile(songPath);
+            LoadSamples();
+            ReadHowToPlayFile();
 
             songsListComboBox.Visibility = Visibility.Hidden;
             f2ButtonText.Visibility = Visibility.Hidden;
 
+            LaunchpadCondBar.Foreground = Brushes.LightGreen;
             playLock = false;
         }
 
-        private void ReadHowToPlayFile(string path)
+        private void LoadSamples()
         {
-            path = path + @"\howtoplay.lp"; // DISC:\\...\...\...\...\Samples\<SongName>\howtoplay.lp
+            for (int i = 0; i < samples.Length; i++)
+            {
+                samples[i] = new MediaPlayer();
+                samples[i].Volume = 0;
+                samples[i].Open(new Uri(songPath + "\\" + ((ButtonCodes)i) + ".wav"));
+                volumeSlider.Value = samples[i].Volume;
+            }
+            volumeSlider.Visibility = Visibility.Visible;
+            entAndVolTextLabel.Visibility = Visibility.Visible;
+        }
+
+        private void ReadHowToPlayFile()
+        {
             try
             {
-                using (StreamReader sr = new StreamReader(path))
+                using (StreamReader sr = new StreamReader(songPath + @"\howtoplay.lp"))
                 {
                     HowToPlayText.Content = sr.ReadToEnd();
                 }
@@ -201,8 +220,16 @@ namespace Cyberpad
                 {
                     buttons[i].Foreground = new SolidColorBrush(Colors.Red);
                     buttons[i].BorderBrush = new SolidColorBrush(Colors.Red);
-                    try { sounds[i].Open(new Uri(songPath + "\\" + ((ButtonCodes)i) + ".wav")); } catch { }
-                    sounds[i].Play();
+
+                    try
+                    {
+                        //samples[i].Volume = 1;
+                        samples[i].Play();
+                        samples[i].Open(new Uri(songPath + "\\" + ((ButtonCodes)i) + ".wav"));
+                    }
+                    catch { }
+
+                    break;
                 }
             }
 
@@ -221,7 +248,47 @@ namespace Cyberpad
                 songsListComboBox.Visibility = Visibility.Hidden;
                 f2ButtonText.Visibility = Visibility.Hidden;
             }
-            else if (e.Key == Key.F9) { }
+            else if (e.Key == Key.F9) 
+            {
+                if (File.Exists(programPath + @"\help.txt"))
+                {
+                    Process.Start(programPath + @"\help.txt");
+                }
+                else
+                {
+                    FileInfo helpFile = new FileInfo(programPath + @"\help.txt");
+                    using (StreamWriter streamWriter = helpFile.CreateText())
+                    {
+                        streamWriter.WriteLine(@"  _              _    _ _   _  _____ _    _ _____        _____  
+ | |        /\  | |  | | \ | |/ ____| |  | |  __ \ /\   |  __ \ 
+ | |       /  \ | |  | |  \| | |    | |__| | |__) /  \  | |  | |
+ | |      / /\ \| |  | | . ` | |    |  __  |  ___/ /\ \ | |  | |
+ | |____ / ____ \ |__| | |\  | |____| |  | | |  / ____ \| |__| |
+ |______/_/    \_\____/|_| \_|\_____|_|  |_|_| /_/    \_\_____/ 
+                                                   by EdgeFirewalk");
+
+                        streamWriter.Write(@"
+1) How to load a song:
+    * Press F1
+    * Choose a song from the list
+    * Press 'ENTER' and adjust volume on the slidebar
+    * Enjoy (･ω<)☆
+
+    ---FUNCTIONS---
+    [Keyboard buttons] - Play
+    [Up Arrow] - Make text on your right bigger
+    [Down Arrow] - Make text on your right smaller
+    [Space] - Stop all sound");
+                    }
+
+                    Process.Start(programPath + @"\help.txt");
+                }
+            }
+            else if (e.Key == Key.Enter)
+            {
+                volumeSlider.IsEnabled = true;
+                entAndVolTextLabel.Content = "Volume: " + (volumeSlider.Value * 100);
+            }
             else if (e.Key == Key.Space) { StopSounds(); }
             else if (e.Key == Key.Up && !playLock) 
             { 
@@ -237,11 +304,11 @@ namespace Cyberpad
             //===========================================================
         }
 
-        void StopSounds()
+        private void StopSounds()
         {
-            for (int i = 0; i < sounds.Length; i++)
+            for (int i = 0; i < buttons.Length; i++)
             {
-                sounds[i].Stop();
+                samples[i].Stop();
             }
         }
 
@@ -251,6 +318,15 @@ namespace Cyberpad
             {
                 buttons[i].Foreground = new SolidColorBrush(Colors.White);
                 buttons[i].BorderBrush = new SolidColorBrush(Colors.White);
+            }
+        }
+
+        private void volumeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            for (int i = 0; i < samples.Length; i++)
+            {
+                samples[i].Volume = volumeSlider.Value;
+                entAndVolTextLabel.Content = "Volume: " + Math.Round((volumeSlider.Value * 100), 0);
             }
         }
     }
