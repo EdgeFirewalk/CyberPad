@@ -275,8 +275,8 @@ namespace Cyberpad
 
     ---FUNCTIONS---
     [Keyboard buttons] - Play
-    [Up Arrow] - Make text on your right bigger
-    [Down Arrow] - Make text on your right smaller
+    [Plus] - Make text on your right bigger
+    [Minus] - Make text on your right smaller
     [Space] - Stop all sound");
                     }
 
@@ -289,12 +289,12 @@ namespace Cyberpad
                 entAndVolTextLabel.Content = "Volume: " + (volumeSlider.Value * 100);
             }
             else if (e.Key == Key.Space) { StopSounds(); }
-            else if (e.Key == Key.Up && !playLock) 
+            else if (e.Key == Key.OemPlus && !playLock) 
             { 
                 if (HowToPlayText.FontSize < 100)
                     HowToPlayText.FontSize++; 
             }
-            else if (e.Key == Key.Down && !playLock) 
+            else if (e.Key == Key.OemMinus && !playLock) 
             { 
                 if (HowToPlayText.FontSize > 10)
                     HowToPlayText.FontSize--; 

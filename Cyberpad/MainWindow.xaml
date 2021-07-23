@@ -21,7 +21,7 @@
             <GridSplitter Height="691" Canvas.Left="974" Width="5" Background="White" Cursor="Arrow"/>
 
             <Label x:Name="HowToPlayText"  Content="##################" Canvas.Left="979" Canvas.Top="24" Height="667" Width="295" Foreground="White" FontSize="25"/>
-            <Label Content="[F1] - Track | [Up-Down] - Txt Size | [F9] - Help" Canvas.Left="10" Canvas.Top="122" Height="97" Width="959" Foreground="#FF3E7DEA" Background="{x:Null}" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="37" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Label Content="[F1] - Track | [Plus-Minus] - Txt Size | [F9] - Help" Canvas.Left="10" Canvas.Top="122" Height="97" Width="959" Foreground="#FF3E7DEA" Background="{x:Null}" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="35" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
             <Label x:Name="f2ButtonText" Content="[F2] - Hide" Canvas.Left="448" Canvas.Top="51" Height="57" Width="521" Foreground="#FF3E7DEA" Background="{x:Null}" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="37" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Visibility="Hidden"/>
             <Label Content="[Space] - Stop" Canvas.Left="10" Canvas.Top="584" Height="97" Width="959" Foreground="#FF3E7DEA" Background="{x:Null}" FontFamily="/Cyberpad;component/Fonts/#Glitch Inside" FontSize="37" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
             <Slider x:Name="volumeSlider" Canvas.Left="772" Canvas.Top="656" Width="197" Maximum="1" ValueChanged="volumeSlider_ValueChanged" LargeChange="0.1" IsEnabled="False" Height="25"/>
