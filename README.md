@@ -10,8 +10,8 @@ Development is finally completed (Perhaps small fixes and improvements will be a
 
     ===FUNCTIONS===
     * _Keyboard buttons_ - Play sounds
-    * _Up Arrow_ - Make text on your right bigger
-    * _Down Arrow_ - Make text on your right smaller
+    * _Plus_ - Make text on your right bigger
+    * _Minus_ - Make text on your right smaller
     * _Enter_ - Activate volume slidebar
     * _Space_ - Stop all sound
 
